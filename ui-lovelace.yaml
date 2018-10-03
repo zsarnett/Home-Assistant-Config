@@ -1,0 +1,520 @@
+resources:
+  - url: /local/thermostat-card.js?v=9
+    type: module
+  - url: https://unpkg.com/moment@2.22.2/moment.js
+    type: js
+  - url: /local/custom_ui/calendar-card/calendar-card.js?v=1.4.0
+    type: module
+  - url: /local/custom_ui/alarm_control_panel-card.js?v=2
+    type: js
+  - url: /local/mini-media-player.js?v=1
+    type: js
+  - url: /local/monster-card.js?v=1
+    type: js
+  - url: /local/card-modder.js?v=14
+    type: js
+  - url: /local/grid-layout.js
+    type: module
+  - url: /local/custom_ui/weather-card.js
+    type: js
+  - url: /local/slideshow-card.js?v=0
+    type: js
+  - url: /local/folding-group-entity-row.js
+    type: js
+
+title: Home
+views:
+  - icon: mdi:home
+    panel: true
+    title: Home
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:card-modder
+                card:
+                  type: custom:weather-card
+                  entity_weather: weather.weather
+                  entity_sun: sun.sun
+                  entity_time: sensor.time
+                style:
+                  "margin": "10px"
+                  "border-radius": "25px"
+                  "font-family": 'Tahoma, Geneva, sans-serif'
+                  "box-shadow": "0 2px 4px rgba(0,0,0,0.18)"
+              - type: custom:card-modder
+                card:
+                  type: iframe
+                  url: https://embed.windy.com/embed2.html?lat=38.014&lon=-84.509&zoom=6&level=surface&overlay=radar&menu=&message=true&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat=38.005&detailLon=-84.533&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1
+                  aspect_ratio: 50%
+                style:
+                  "margin": "10px"
+                  "border-radius": "25px"
+                  "box-shadow": "0 2px 4px rgba(0,0,0,0.18)"
+          - type: vertical-stack
+            cards:
+              - type: custom:card-modder
+                card:
+                  type: glance
+                  column_width: 30%
+                  entities:
+                    - device_tracker.madisonsiphone
+                    - device_tracker.003de8ebbc6a
+                    - entity: sensor.house_alarm_sensor
+                    - entity: sensor.home_to_zacks_work
+                      icon: mdi:car
+                      name: To Zack's Work
+                    - entity: sensor.home_to_madisons_work
+                      icon: mdi:car
+                      name: To Madison's Work
+                style:
+                  "margin": "10px"
+                  "border-radius": "25px"
+                  "box-shadow": "0 2px 4px rgba(0,0,0,0.18)"
+              - type: custom:card-modder
+                card:
+                  type: "custom:calendar-card"
+                  showProgressBar: false
+                  entities:
+                    - calendar.arnettzackarygmailcom
+                    - calendar.mbartlett716gmailcom
+                    - calendar.dog_stuff
+                    - calendar.moneybills
+                style:
+                  "margin": "10px"
+                  "border-radius": "25px"
+                  "--dark-primary-opacity": "0"
+                  "--paper-font-headline_-_line-height": "0"
+                  "box-shadow": "0 2px 4px rgba(0,0,0,0.18)"
+      # - type: vertical-stack
+      #   cards:
+      #     - type: custom:card-modder
+      #       card:
+      #         type: custom:weather-card
+      #         entity_weather: weather.weather
+      #         entity_sun: sun.sun
+      #       style:
+      #         "margin": "10px"
+      #         "box-shadow": "none"
+      #         "font-family": 'Tahoma, Geneva, sans-serif'
+      #     - type: custom:card-modder
+      #       card:
+      #         type: iframe
+      #         url: https://embed.windy.com/embed2.html?lat=38.014&lon=-84.509&zoom=6&level=surface&overlay=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat=38.005&detailLon=-84.533&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1
+      #         aspect_ratio: 50%
+      #       style:
+      #         "margin": "10px"
+      #         "box-shadow": none
+      # - type: vertical-stack
+        # cards:
+        #   - type: custom:card-modder
+        #     card:
+        #       type: glance
+        #       column_width: 30%
+        #       entities:
+        #         - device_tracker.madisonsiphone
+        #         - device_tracker.003de8ebbc6a
+        #         - entity: sensor.house_alarm_sensor
+        #         - entity: sensor.home_to_zacks_work
+        #           icon: mdi:car
+        #         - entity: sensor.home_to_madisons_work
+        #           icon: mdi:car
+        #     style:
+        #       "margin": "10px"
+        #       "box-shadow": none
+        #   - type: custom:card-modder
+        #     card:
+        #       type: "custom:calendar-card"
+        #       showProgressBar: false
+        #       entities:
+        #         - calendar.arnettzackarygmailcom
+        #         - calendar.mbartlett716gmailcom
+        #         - calendar.dog_stuff
+        #         - calendar.moneybills
+        #     style:
+        #       "box-shadow": none
+        #       "margin": "10px"
+      # - type: vertical-stack
+      #   cards:
+      #     - type: glance
+      #       entities:
+      #         - device_tracker.madisonsiphone
+      #         - device_tracker.003de8ebbc6a
+      #         - entity: sensor.home_to_zacks_work
+      #           icon: mdi:car
+      #         - entity: sensor.home_to_madisons_work
+      #           icon: mdi:car
+      #         - entity: sensor.house_alarm_sensor
+      #     - type: horizontal-stack
+      #       cards:
+      #         - type: vertical-stack
+      #           cards:
+      #             - type: weather-forecast
+      #               entity: weather.weather
+      #             - type: iframe
+      #               url: https://embed.windy.com/embed2.html?lat=38.014&lon=-84.509&zoom=6&level=surface&overlay=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat=38.005&detailLon=-84.533&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1
+      #               aspect_ratio: 50%
+      #         - type: vertical-stack
+      #           cards:
+      #             - type: "custom:calendar-card"
+      #               showProgressBar: false
+      #               entities:
+      #                 - calendar.arnettzackarygmailcom
+      #                 - calendar.mbartlett716gmailcom
+      #                 - calendar.dog_stuff
+      #                 - calendar.moneybills
+      # - type: vertical-stack
+      #   cards:
+      #     - type: weather-forecast
+      #       entity: weather.weather
+      #     - type: iframe
+      #       url: https://embed.windy.com/embed2.html?lat=38.014&lon=-84.509&zoom=6&level=surface&overlay=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&detail=&detailLat=38.005&detailLon=-84.533&metricWind=mph&metricTemp=%C2%B0F&radarRange=-1
+      #       aspect_ratio: 50%
+      # - type: vertical-stack
+      #   cards:
+      #     - type: entities
+      #       entities:
+      #         - device_tracker.madisonsiphone
+      #         - device_tracker.003de8ebbc6a
+      #         - entity: sensor.home_to_zacks_work
+      #           icon: mdi:car
+      #         - entity: sensor.home_to_madisons_work
+      #           icon: mdi:car
+      #         - entity: sensor.house_alarm_sensor
+      #     - type: "custom:calendar-card"
+      #       showProgressBar: false
+      #       entities:
+      #         - calendar.arnettzackarygmailcom
+      #         - calendar.mbartlett716gmailcom
+      #         - calendar.dog_stuff
+      #         - calendar.moneybills
+  - icon: mdi:ballot
+    panel: true
+    title: Utility
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: vertical-stack
+            cards:
+              - type: custom:card-modder
+                card:
+                  type: glance
+                  column_width: 30%
+                  entities:
+                    - entity: light.bedroom_lights
+                      tap_action: toggle
+                    - entity: light.bedroom_lamp_2
+                      tap_action: toggle
+                      name: BR Lamp
+                    - entity: light.madisons_office_lights
+                      tap_action: toggle
+                      name: M Office
+                    - entity: light.madison_office_lamp_2
+                      tap_action: toggle
+                      name: M Lamp
+                    - entity: light.office_lights
+                      name: Z Office
+                    - entity: switch.office_fan_plug
+                      tap_action: toggle
+                style:
+                  "margin": "10px"
+                  "box-shadow": "none"
+              - type: custom:card-modder
+                card:
+                  type: entities
+                  entities:
+                    - entity: cover.garage_door_1
+                      secondary_info: last-changed
+                    - entity: binary_sensor.garage_door
+                      name: Garage Inside Door
+                      secondary_info: last-changed
+                    - entity: binary_sensor.front_door
+                      name: Front Door
+                      secondary_info: last-changed
+                    - entity: binary_sensor.back_door
+                      name: Back Door
+                      secondary_info: last-changed
+                style:
+                  "margin": "10px"
+                  "box-shadow": "none"
+              - type: custom:card-modder
+                card:
+                  type: entities
+                  entities:
+                    - entity: vacuum.vacuumbot
+                      secondary_info: last-changed
+                    - entity: script.1536169303108
+                      name: Start Vacuum
+                      icon: mdi:play-circle
+                    - type: call-service
+                      icon: mdi:home
+                      name: Home
+                      action_name: Send Home
+                      service: vacuum.return_to_base
+                      service_data:
+                        entity_id: vacuum.vacuumbot
+                    - entity: sensor.vacuum_battery
+                      name: Battery
+                    - entity: sensor.vacuum_status
+                      icon: mdi:settings
+                      name: Status
+                    - entity: sensor.vacuum_fan_speed
+                      icon: mdi:fan
+                      name: Fan Speed
+                style:
+                  "margin": "10px"
+                  "box-shadow": "none"
+                  "--primary-color": "var(--primary-text-color)"
+          - type: vertical-stack
+            cards:
+              - type: horizontal-stack
+                cards:
+                  - type: custom:card-modder
+                    card:
+                      type: custom:thermostat-card
+                      title: Upstairs
+                      entity: climate.upstairs
+                      step: 1
+                      highlight_tap: true
+                      hvac:
+                        states:
+                          'Off': 'off'
+                          'Cooling': 'cool'
+                          'Heaing': 'heat'
+                        attribute: operation_mode
+                    style:
+                      "margin": "10px"
+                      "box-shadow": "none"
+                  - type: custom:card-modder
+                    card:
+                      type: custom:thermostat-card
+                      title: Downstairs
+                      entity: climate.downstairs
+                      step: 1
+                      highlight_tap: true
+                      hvac:
+                        states:
+                          'Off': 'off'
+                          'Cooling': 'cool'
+                          'Heaing': 'heat'
+                        attribute: operation_mode
+                    style:
+                      "margin": "10px"
+                      "box-shadow": "none"
+              - type: custom:card-modder
+                card:
+                  type: entities
+                  entities:
+                    - sensor.front_door_temp
+                    - sensor.garage_door_temp
+                    - sensor.madison_office_button_temp
+                style:
+                  "margin": "10px"
+                  "box-shadow": "none"
+  - icon: mdi:shield-half-full
+    title: Alarm
+    cards:
+      - type: custom:card-modder
+        card:
+          type: custom:alarm_control_panel-card
+          entity: alarm_control_panel.house_alarm
+          show_keypad: true
+          title: House Alarm
+          style: '--alarm-color-disarmed: var(--label-badge-blue);'
+          states:
+            - arm_away
+            - arm_home
+        style:
+          "margin": "10px"
+          "box-shadow": "none"
+  - icon: mdi:speaker
+    title: Media
+    cards:
+      - type: custom:card-modder
+        card:
+          type: entities
+          entities:
+            - entity: media_player.spotify
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.home_group
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.office_speaker
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.madisons_office_speaker
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.bedroom_speaker
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.living_room_home
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.living_room_tv
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.bedroom_chromecast_1
+              type: "custom:mini-media-player"
+              group: true
+            - entity: media_player.office_chromecast
+              type: "custom:mini-media-player"
+              group: true
+        style:
+          "margin": "10px"
+          "box-shadow": "none"
+  - icon: mdi:lightbulb
+    title: Lights
+    cards:
+      - type: custom:card-modder
+        card:
+          type: entities
+          show_header_toggle: false
+          entities:
+            - light.all_lights
+        style:
+          "margin": "10px"
+          "box-shadow": "none"
+      - type: custom:card-modder
+        card:
+          type: entities
+          title: Bedroom
+          show_header_toggle: true
+          entities:
+            - light.bedroom_1
+            - light.bedroom_2
+            - light.bedroom_3
+            - light.bedroom_lamp_2
+        style:
+          "margin": "10px"
+          "box-shadow": "none"
+      - type: vertical-stack
+        cards:
+          - type: custom:card-modder
+            card:
+              type: entities
+              title: Madison's Office
+              show_header_toggle: true
+              entities:
+                - light.madison_office_1
+                - light.madison_office_2
+                - light.madison_office_lamp_2
+            style:
+              "margin": "10px"
+              "box-shadow": "none"
+          - type: custom:card-modder
+            card:
+              type: entities
+              title: Zack's Office
+              show_header_toggle: true
+              entities:
+                - light.office_1
+                - light.office_2
+            style:
+              "margin": "10px"
+              "box-shadow": "none"
+  - icon: mdi:lan
+    title: Local Network
+    cards:
+      - type: entities
+        show_state: true
+        entities:
+          - entity: sensor.ipv4_address_eth0
+            name: IP Address
+            icon: mdi:ip-network
+          - entity: sensor.uptime
+            icon: mdi:timelapse
+          - entity: sensor.last_boot
+          - entity: sensor.memory_free
+          - entity: sensor.processor_use
+          - entity: sensor.disk_free_home
+            name: Disk Free
+          - entity: sensor.disk_use_percent_home
+            name: Disk Use
+      - type: history-graph
+        hours_to_show: 24
+        title: 'Network'
+        column_width: calc(100% / 2)
+        entities:
+          - entity: sensor.network_in_eth0
+            name: Network In
+          - entity: sensor.network_out_eth0
+            name: Network Out
+
+      - type: history-graph
+        hours_to_show: 24
+        title: 'Packets'
+        column_width: calc(100% / 2)
+        entities:
+          - entity: sensor.packets_in_eth0
+            name: Packets In
+          - entity: sensor.packets_out_eth0
+            name: Packets Out
+  - icon: mdi:cogs
+    name: Automation
+    cards:
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: Automations
+        filter:
+          include:
+            - entity_id: automation.*
+      - type: custom:card-modder
+        card:
+          type: custom:monster-card
+          card:
+            type: entities
+            title: Scripts
+          filter:
+            include:
+              - entity_id: Script.*
+        style:
+          "--primary-color": "var(--primary-text-color)"
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: Goups
+        filter:
+          include:
+            - entity_id: group.*
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: Booleans
+        filter:
+          include:
+            - entity_id: input_boolean.*
+      - type: custom:monster-card
+        card:
+          type: entities
+          title: ZigBee
+        filter:
+          include:
+            - entity_id: zha.*
+  - icon: mdi:test-tube
+    title: Testing Ground
+    cards:
+      # - type: custom:slideshow-card
+      #   arrow_color: var(--primary-text-color)
+      #   arrow_opacity: .7
+      #   folder: sensor.images
+      #   auto_play: true
+      #   auto_delay: 4
+      #   fill: true
+      #   style:
+      #     "border-radius": "25px"
+      - type: custom:slideshow-card
+        cards:
+          - type: history-graph
+            hours_to_show: 24
+            refresh_interval: 0
+            entities:
+              - entity: weather.weather
+          - type: history-graph
+            hours_to_show: 24
+            refresh_interval: 0
+            entities:
+              - entity: vacuum.vacuumbot

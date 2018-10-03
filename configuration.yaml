@@ -1,0 +1,273 @@
+homeassistant:
+  name: Home
+  latitude: !secret latitude
+  longitude: !secret longitude
+  elevation: 282.854
+  unit_system: imperial
+  time_zone: EST
+  whitelist_external_dirs:
+      - /config/www/images
+  customize:
+    script.1536169303108:
+      can_cancel: false
+    sensor.house_alarm_sensor:
+      templates:
+        icon_color: >
+          if (state === 'Armed Away') return 'rgb(222,40,40)';
+          if (state === 'Armed Home') return 'rgb(222,40,40)';
+          if (state === 'Triggered') return 'rgb(222,40,40)';
+          if (state === 'Pending') return 'rgb(252,255,0)';
+          return 'rgb(3,155,229)';
+    binary_sensor.back_door:
+      device_class: door
+    binary_sensor.front_door:
+      device_class: door
+    binary_sensor.garage_door:
+      device_class: door
+
+frontend:
+  javascript_version: latest
+  themes: !include themes.yaml
+
+panel_iframe:
+  terminal:
+    title: Terminal
+    icon: mdi:console
+    url: !secret terminal_url
+  configurator:
+    title: Configurator
+    icon: mdi:wrench
+    url: !secret configurator_url
+
+config:
+
+http:
+  base_url: !secret https_url
+  ssl_profile: intermediate
+  ssl_certificate: /ssl/fullchain.pem
+  ssl_key: /ssl/privkey.pem
+  api_password: !secret usual_password
+
+updater:
+
+discovery:
+  enable:
+    - homekit
+
+conversation:
+
+history:
+
+logbook:
+
+sensor:
+  - platform: waze_travel_time
+    name: Home to Zack's Work
+    origin: !secret home_address
+    destination: !secret zacks_work_address
+    region: 'US'
+  - platform: waze_travel_time
+    name: Home to Madison's Work
+    origin: !secret home_address
+    destination: !secret madison_work_address
+    region: 'US'
+  - platform: template
+    sensors:
+      vacuum_battery:
+        friendly_name: "Vacuum Battery"
+        unit_of_measurement: '%'
+        icon_template: "{{ state_attr('vacuum.vacuumbot', 'battery_icon') }}"
+        value_template: "{{ state_attr('vacuum.vacuumbot', 'battery_level')|round }}"
+      vacuum_status:
+        friendly_name: "Vacuum Status"
+        value_template: "{{ state_attr('vacuum.vacuumbot', 'status')|title }}"
+      vacuum_fan_speed:
+        friendly_name: "Vacuum Fan Speed"
+        value_template: "{{ state_attr('vacuum.vacuumbot', 'fan_speed')|title }}"
+      house_alarm_sensor:
+        friendly_name: "House Alarm"
+        value_template: "{% if is_state('alarm_control_panel.house_alarm','armed_away') -%} Armed Away {% elif is_state('alarm_control_panel.house_alarm','armed_home') -%} Armed Home {%- else -%} {{states('alarm_control_panel.house_alarm')|title}} {%- endif %}"
+        icon_template: "{% if is_state('alarm_control_panel.house_alarm', 'armed_away') -%} mdi:security-lock {% elif is_state('alarm_control_panel.house_alarm', 'armed_home') -%} mdi:security-home {%- else -%} mdi:shield-outline {%- endif %}"
+      uptime:
+        friendly_name: Uptime
+        value_template: "{{ states.sensor.since_last_boot.state.split('.')[0] }}"
+  - platform: systemmonitor
+    resources:
+    - type: ipv4_address
+      arg: eth0
+    - type: network_in
+      arg: eth0
+    - type: network_out
+      arg: eth0
+    - type: packets_in
+      arg: eth0
+    - type: packets_out
+      arg: eth0
+    - type: disk_free
+      arg: /home
+    - type: memory_free
+    - type: processor_use
+    - type: since_last_boot
+    - type: last_boot
+    - type: disk_use_percent
+      arg: /home
+  - platform: time_date
+    display_options:
+      - 'time'
+  - platform: folder
+    folder: /config/www/images
+
+tts:
+  - platform: google
+    language: 'en-us'
+
+cloud:
+  google_actions:
+    filter:
+      include_entities:
+        - cover.garage_door
+      include_domains:
+        - script
+        - sensor
+        - switch
+        - light
+      exclude_entities:
+        - light.bedroom
+        - light.bedroom_lamp
+        - light.entertainment_area_1
+        - light.madison_office
+        - light.madison_office_lamp
+        - light.office
+    entity_config:
+      cover.garage_door:
+        name: Garage Door
+        aliases:
+          - Garage
+
+google:
+  client_id: !secret google_client_id
+  client_secret: !secret google_secret
+
+device_tracker:
+  - platform: asuswrt
+    host: !secret router_ip
+    username: !secret router_username
+    password: !secret usual_password
+    interval_seconds: 10
+    consider_home: 60
+
+weather:
+  - platform: yweather
+    woeid: !secret weather_woeid
+    name: Weather
+
+sun:
+
+input_boolean:
+  good_night:
+
+climate:
+  - platform: honeywell
+    username: !secret usual_email
+    password: !secret usual_password
+    region: us
+    scan_interval: 600
+
+media_player:
+  - platform: spotify
+    client_id: !secret spotify_client_id
+    client_secret: !secret spotify_secret
+
+ecovacs:
+  username: !secret usual_email
+  password: !secret usual_password
+  country: 'us'
+  continent: 'na'
+
+cover:
+  - platform: myq
+    username: !secret usual_email
+    password: !secret usual_password
+    type: liftmaster
+  - platform: template
+    covers:
+      garage_door_1:
+        friendly_name: "Garage Door"
+        value_template: "{{ states('cover.garage_door') }}"
+        icon_template: >-
+          {% if is_state('cover.garage_door','open') %}
+            mdi:garage-open
+          {% else %}
+            mdi:garage
+          {% endif %}
+        open_cover:
+          service: cover.open_cover
+        close_cover:
+          service: cover.close_cover
+
+notify:
+  - name: Notifications
+    platform: pushbullet
+    api_key: !secret pushbullet_api_key
+
+alarm_control_panel:
+  - platform: manual
+    name: House Alarm
+    code: !secret alarm_code
+    pending_time: 0
+    delay_time: 0
+    disarmed:
+      trigger_time: 0
+    armed_home:
+      pending_time: 0
+      delay_time: 0
+    armed_away:
+      pending_time: 60
+      delay_time: 30
+
+zha:
+  usb_path: /dev/ttyUSB1
+  database_path: zigbee.db
+
+light:
+  - platform: group
+    name: Bedroom Lights
+    entities:
+      - light.bedroom_1
+      - light.bedroom_2
+      - light.bedroom_3
+  - platform: group
+    name: Office Lights
+    entities:
+      - light.office_1
+      - light.office_2
+  - platform: group
+    name: Madison's Office Lights
+    entities:
+      - light.madison_office_1
+      - light.madison_office_2
+  - platform: group
+    name: All Lights
+    entities:
+      - light.madison_office_1
+      - light.madison_office_2
+      - light.office_1
+      - light.office_2
+      - light.bedroom_1
+      - light.bedroom_2
+      - light.bedroom_3
+      - light.bedroom_lamp_2
+      - light.madison_office_lamp_2
+
+logger:
+  default: warning
+  # logs:
+    # homeassistant.components.homekit_controller: debug
+    # homeassistant.components.climate.homekit_controller: debug
+    # homeassistant.components.climate: debug
+    # homeassistant.components.climate.honeywell: debug
+    # homeassistant.components.honeywell: debug
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml

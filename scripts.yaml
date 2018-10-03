@@ -1,0 +1,55 @@
+'1536169303108':
+  alias: Turn Vacumm on at Max Power
+  sequence:
+  - data:
+      entity_id: vacuum.vacuumbot
+    service: vacuum.turn_on
+  - delay: '5'
+  - data:
+      entity_id: vacuum.vacuumbot
+      fan_speed: high
+    service: vacuum.set_fan_speed
+'1536169303109':
+  alias: Talk to google
+  sequence:
+  - service: tts.google_say
+    data_template:
+      entity_id: media_player.office_speaker
+      message: May the Force be with you.
+'1536935186105':
+  alias: Alarm Away
+  sequence:
+  - data:
+      code: 5878
+      entity_id: alarm_control_panel.house_alarm
+    service: alarm_control_panel.alarm_arm_away
+'1536935186106':
+  alias: Alarm Home
+  sequence:
+  - data:
+      code: 5878
+      entity_id: alarm_control_panel.house_alarm
+    service: alarm_control_panel.alarm_arm_home
+'1537392609513':
+  alias: ZHA Permit
+  sequence:
+  - data:
+      duration: 60
+    service: zha.permit
+'1537825420986':
+  alias: Reload Themes
+  sequence:
+  - data: {}
+    service: frontend.reload_themes
+'1537834668762':
+  alias: Dark Theme
+  sequence:
+  - data:
+      name: dark_theme
+    service: frontend.set_theme
+'1537834700458':
+  alias: Light Theme
+  sequence:
+  - data:
+      name: Light_Theme
+    service: frontend.set_theme

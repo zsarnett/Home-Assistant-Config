@@ -1,0 +1,25 @@
+input_boolean.weather:
+  custom_ui_state_card: custom-weather-card
+  config:
+    weather: weather.yweather
+    sun: sun.sun
+light.office:
+  custom_ui_state_card: state-card-custom-ui
+  state_card_mode: break-slider
+  stretch_slider: true
+  extra_data_template: "${attributes.power_consumption !== 0 ? (attributes.power_consumption + 'W') : ''}"
+  hide_control: false
+  show_last_changed: false
+  theme: happy
+  confirm_controls_show_lock: true
+  slider_theme:
+    min: 10
+    max: 200
+    pin: true
+    off_when_min: false
+    report_when_not_changed: false
+  extra_badge:
+    entity_id: sensor.my_sensor  # Will take precedence over attribute and unit below.
+    attribute: power_consumption
+    unit: W
+    blacklist_states: 0

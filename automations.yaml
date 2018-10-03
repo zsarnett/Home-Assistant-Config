@@ -1,0 +1,228 @@
+- id: '1535908096627'
+  alias: Set Theme at Startup
+  trigger:
+  - event: start
+    platform: homeassistant
+  action:
+  - data:
+      name: Light_Theme
+    service: frontend.set_theme
+- id: '1536186655922'
+  alias: Vacuum Bot Status Change
+  trigger:
+  - entity_id: sensor.vacuum_status
+    from: Returning
+    platform: state
+    to: Charging
+  condition: []
+  action:
+  - data:
+      message: VacuumBot has finished Cleaning and has Returned Home
+      target:
+      - device/zacksphone
+    service: notify.notifications
+- id: '1536186655923'
+  alias: Trigger Alarm While Away
+  trigger:
+  - entity_id: binary_sensor.garage_door
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.front_door
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.back_door
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.house_alarm
+    state: armed_away
+  action:
+  - data:
+      entity_id: alarm_control_panel.house_alarm
+    service: alarm_control_panel.alarm_trigger
+- id: '1536186655925'
+  alias: Trigger Alarm While Home
+  trigger:
+  - entity_id: binary_sensor.garage_door
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: binary_sensor.front_door
+    from: 'off'
+    platform: state
+    to: 'on'
+  - entity_id: cover.garage_door
+    from: closed
+    platform: state
+    to: open
+  - entity_id: binary_sensor.back_door
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: alarm_control_panel.house_alarm
+    state: armed_home
+  action:
+  - data:
+      entity_id: alarm_control_panel.house_alarm
+    service: alarm_control_panel.alarm_trigger
+- id: '1536186655924'
+  alias: Send notification when alarm triggered
+  trigger:
+  - entity_id: alarm_control_panel.house_alarm
+    platform: state
+    to: triggered
+  action:
+  - data:
+      message: THE ALARM HAS BEEN TRIGGERED!
+      target:
+      - device/zacksphone
+    service: notify.notifications
+  - data:
+      entity_id: media_player.home_group
+      volume_level: 1.0
+    service: media_player.volume_set
+  - data:
+      entity_id: media_player.home_group
+      media_content_id: https://www.soundsnap.com/streamers/play.php?id=1536361462.831:01fdf4763d8f4b37c5baa24dd9d151d82b90f2d3:7b383ca30ddc475c7970e4b5e6d25ac5464ac0740edc4ecc139fc76d8d331160e29a5fca4472d24feddaaf9756c06b27bc268b965c45e362f8b30c00f1847a6f4299d7bbfc65f00237dbd96e1aea68c4080e6f074e7440f5aed6c52ee8c87389adda9c5b3da06a765210a1489798456dd865c34aec1d4ea883ee8377aee1bad3cac45c9005a14068c1a97fd90b3442151d085c1c20f102c6878872e257cbd4594f1a80c1e909062656dfa2afeb509bdc51455b54ebffe96e271224e636ed732171dc7189a6293990d4b0afb90b8476a3d0c2732b60c856208a74779392a686f560f290cf704c5f4061467911caa3da98
+      media_content_type: audio/mp3
+    service: media_player.play_media
+- id: '1536355844322'
+  alias: Turn Madison's Office Lamp on with Button
+  trigger:
+  - entity_id: binary_sensor.madison_office_lamp_button
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      entity_id: light.madison_office_lamp
+    service: light.toggle
+- id: '1536355844326'
+  alias: Set Dark Theme for the Night
+  initial_state: true
+  trigger:
+  - platform: time
+    at: '18:45'
+  action:
+  - service: frontend.set_theme
+    data:
+      name: dark_theme
+- id: '1536355844327'
+  alias: Set Light Theme for the Day
+  initial_state: true
+  trigger:
+  - platform: time
+    at: '08:00'
+  action:
+  - service: frontend.set_theme
+    data:
+      name: Light_Theme
+- id: '1536933987664'
+  alias: Pending Beeping - 60 Seconds
+  trigger:
+  - entity_id: alarm_control_panel.house_alarm
+    platform: state
+    from: disarmed
+    to: pending
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.home_group
+      volume_level: 0.7
+    service: media_player.volume_set
+  - data:
+      entity_id: media_player.home_group
+      media_content_id: https://www.soundsnap.com/streamers/play.php?id=1536937371.1418:34a0481967441f2e971868825cb73055c49ce0bc:30ead5c016b28c5bc4f7c937a6698e9eb90f480c24ac290841be08be23ef5ae3d2c7320de967ef8039b6fcd6edb6ea8f82dd987c8eaf727ce79c6f73955e24ffc1a4e03e7fe1b768b6d67047698e57a86f94751a4750c8bc68af525b945ed477df7c6c7d74ade7ad0d05a25a5f2fee64c2867cc5e3e1056a1adbf111e692edb294af88401f9154b0e8365f55da1e7e6cd89611919e500cf6a230c6027fc25443a2bac00dbff47a78c6ea406c01acc39a3e8b32f054d7a6da49579a5976dded215e30da6279992a7026b4f7a8f5e7f77c725bf8a411fdbf00e96678a52185928fdeeb6e9a699df708ab81d232c14cfb9110e62b12969a6ed5b33e260cf4610c7d
+      media_content_type: audi/mp3
+    service: media_player.play_media
+- id: '1536933987665'
+  alias: Pending Beeping - 30 seconds
+  trigger:
+  - entity_id: alarm_control_panel.house_alarm
+    from: armed_away
+    platform: state
+    to: pending
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.home_group
+      volume_level: 0.7
+    service: media_player.volume_set
+  - data:
+      entity_id: media_player.home_group
+      media_content_id: https://www.soundsnap.com/streamers/play.php?id=1536937371.1418:34a0481967441f2e971868825cb73055c49ce0bc:30ead5c016b28c5bc4f7c937a6698e9eb90f480c24ac290841be08be23ef5ae3d2c7320de967ef8039b6fcd6edb6ea8f82dd987c8eaf727ce79c6f73955e24ffc1a4e03e7fe1b768b6d67047698e57a86f94751a4750c8bc68af525b945ed477df7c6c7d74ade7ad0d05a25a5f2fee64c2867cc5e3e1056a1adbf111e692edb294af88401f9154b0e8365f55da1e7e6cd89611919e500cf6a230c6027fc25443a2bac00dbff47a78c6ea406c01acc39a3e8b32f054d7a6da49579a5976dded215e30da6279992a7026b4f7a8f5e7f77c725bf8a411fdbf00e96678a52185928fdeeb6e9a699df708ab81d232c14cfb9110e62b12969a6ed5b33e260cf4610c7d
+      media_content_type: audi/mp3
+    service: media_player.play_media
+  - delay: 00:00:30
+  - data:
+      entity_id: media_player.home_group
+    service: media_player.media_stop
+- id: '1536968264728'
+  alias: Stop Pending Beeping
+  trigger:
+  - entity_id: alarm_control_panel.house_alarm
+    from: pending
+    platform: state
+    to: disarmed
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.home_group
+    service: media_player.media_stop
+- id: '1536973184244'
+  alias: Stop Alarm when Disarmed
+  trigger:
+  - entity_id: alarm_control_panel.house_alarm
+    platform: state
+    to: disarmed
+  condition: []
+  action:
+  - data:
+      entity_id: media_player.home_group
+    service: media_player.media_stop
+- id: '1537395875115'
+  alias: Toggle Bedroom Lamp
+  trigger:
+  - entity_id: binary_sensor.bedroom_lamp_switch
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.bedroom_lamp_2
+    service: light.toggle
+- id: '1537675143735'
+  alias: Toggle Bedroom Lights
+  trigger:
+  - entity_id: binary_sensor.bedroom_light_switch
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
+  action:
+  - data:
+      entity_id: light.bedroom_lights
+    service: light.toggle
+- id: '1537675143736'
+  alias: 'Start Vacuum on WeekDays @ 9AM'
+  trigger:
+    - platform: time
+      at: '09:00:00'
+  condition:
+    condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - thu
+      - fri
+  action:
+    - service: script.1536169303108
